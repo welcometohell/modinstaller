@@ -13,12 +13,20 @@ class DefaultController extends yupe\components\controllers\BackController
     {
         $model = new Form();
         if(isset($_POST['Form'])){
-            if(Yii::app()->controller->module->checkSelf() === true)
+            $check=Yii::app()->controller->module->checkSelf();
+            if($check === true)
             {
                 $model->attributes = $_POST['Form'];
-                if($model->validate()) {
-                    $model->saveModule();
+                if($name = $model->validate()) {
+                    $model->saveModule($name);
+                    Yii::app()->user->setFlash(
+                        yupe\widgets\YFlashMessages::SUCCESS_MESSAGE,
+                        Yii::t('ModInstallerModule.modinstaller', 'Модуль '.$name.' успешно установлен!')
+                    );
                 }
+             }
+             else {
+               $model->addErrors($check);
              }
         }
         $this->render('index',array('model' => $model));
