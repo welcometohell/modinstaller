@@ -8,7 +8,7 @@ use yupe\components\WebModule;
 
 class ModInstallerModule extends WebModule
 {
-    public function getDependencies()
+  public function getDependencies()
     {
         return array();
     }
@@ -29,23 +29,28 @@ class ModInstallerModule extends WebModule
 
         $modulesPath = $this->getModulesPath();
         $tempPath = $this->getTempPath();
-
-        if (!is_writable($modulesPath) && !is_writable($tempPath))
-            $messages[WebModule::CHECK_ERROR][] =  array(
-                'type'    => WebModule::CHECK_ERROR,
-                'message' => 'Директория "{upd}" или директория "{tmp}" не доступна для записи!', array(
-                    '{upd}'  => $modulesPath,
-                    '{tmp}' => $tempPath,
-                     ),
-
-            );
-
-        return (isset($messages[WebModule::CHECK_ERROR])) ? $messages : true;
+        if (!is_writable($modulesPath) || !is_writable($tempPath)) {
+            $messages['dir'] = 'Директория "'.$modulesPath.'" или директория "{'.$tempPath.'}" не доступна для записи!';
+        }
+        if (!extension_loaded("zip")) {
+            $messages['zip'] = 'Не установлено расширения для работы с архивами!';
+        }
+        return $messages ? $messages : true;
     }
 
     public function getParamsLabels()
     {
         return array();
+    }
+    
+    public function getAdminPageLink()
+    {
+        return '/modinstaller/defaultBackend/index';
+    }
+    
+    public function getCategory()
+    {
+        return Yii::t('ModinstallerModule.modinstaller', 'Сервисы');
     }
 
     public function getEditableParams()
@@ -61,11 +66,6 @@ class ModInstallerModule extends WebModule
     public function getIsInstallDefault()
     {
         return true;
-    }
-
-    public function getCategory()
-    {
-        return Yii::t('ModInstallerModule.modinstaller', 'Контент');
     }
 
     public function getName()
