@@ -12,14 +12,15 @@ $form = $this->beginWidget('bootstrap.widgets.TbActiveForm', array(
     'type'                   => 'vertical',
     'htmlOptions'            => array('class' => 'well', 'enctype'=>'multipart/form-data'),
     'inlineErrors'           => true,
-)); ?>
-<div>
-    <div >
-        <?php echo $form->fileField($model,'file') ?>
+)); 
+echo CHtml::errorSummary($model);
+?>
+
+    <div class='row-fluid control-group'>
+        <?php echo $form->fileFieldRow($model, 'file', array('class' => 'span7', 'maxlength' => 500, 'size' => 60)); ?>
     </div>
-    <div >
-        <?php echo $form->textField($model,'url') ?>
+    <div class='row-fluid control-group'>
+        <?php echo $form->textFieldRow($model, 'url', array('class' => 'span7', 'maxlength' => 150, 'size' => 60)); ?>
     </div>
-</div>
 <?php echo CHtml::submitButton('Установить') ?>
 <?php $this->endWidget() ?>
